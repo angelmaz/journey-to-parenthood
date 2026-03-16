@@ -1,0 +1,241 @@
+---
+const {
+  title = 'Journey to Parenthood',
+  description = 'Online childbirth education for expecting parents.',
+  image = '/Journey.png',
+  canonical = 'https://journey-to-parenthood.com/',
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Angelika Mazurek" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:site_name" content="Journey to Parenthood" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={`https://journey-to-parenthood.com${image}`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`https://journey-to-parenthood.com${image}`} />
+
+    <link rel="icon" href="/Journey.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/Journey.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style is:global>
+      :root {
+        --peach: #F5D6C6;
+        --blush: #EFC9C2;
+        --beige: #F9F3EE;
+        --white: #FFFFFF;
+        --taupe: #3D3D3D;
+        --taupe-light: #6b6b6b;
+        --font-head: 'Playfair Display', serif;
+        --font-body: 'Lato', sans-serif;
+        --container-width: 1200px;
+        --section-padding: 80px 20px;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: var(--font-body);
+        color: var(--taupe);
+        background-color: var(--beige);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      h1, h2, h3, h4 {
+        font-family: var(--font-head);
+        font-weight: 700;
+        color: var(--taupe);
+        margin-bottom: 1rem;
+      }
+
+      a { text-decoration: none; color: inherit; transition: 0.3s; }
+      ul { list-style: none; }
+      img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+
+      .btn {
+        display: inline-block;
+        padding: 14px 32px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        box-shadow: 0 4px 15px rgba(239, 201, 194, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background-color: var(--blush);
+        color: var(--white);
+        border-color: var(--blush);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--peach);
+        border-color: var(--peach);
+        transform: translateY(-2px);
+        color: var(--taupe);
+      }
+
+      header {
+        background: var(--white);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .nav-container {
+        max-width: var(--container-width);
+        margin: 0 auto;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-head);
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      .logo img {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+
+      .nav-cta {
+        background: var(--peach);
+        color: var(--taupe);
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 700;
+      }
+
+      footer {
+        background: var(--white);
+        padding: 60px 20px 20px;
+        border-top: 1px solid #eee;
+      }
+
+      .footer-content {
+        max-width: var(--container-width);
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-brand { flex: 1; min-width: 250px; }
+      .footer-brand h4 { font-size: 1.4rem; margin-bottom: 10px; }
+      .footer-links ul li { margin-bottom: 10px; }
+      .footer-bottom {
+        text-align: center;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+        font-size: 0.85rem;
+        color: var(--taupe-light);
+      }
+
+      .container {
+        max-width: var(--container-width);
+        margin: 0 auto;
+      }
+
+      @media (max-width: 768px) {
+        .nav-container {
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav-container">
+        <a class="logo" href="/">
+          <img src="/favicon.png" alt="Journey to Parenthood logo" />
+          <span>Journey to Parenthood</span>
+        </a>
+
+        <nav class="nav-links">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <a href="/#course">Course</a>
+          <a href="/#newsletter">Newsletter</a>
+          <a href="https://journey-to-parenthood.teachable.com" class="nav-cta">Enroll Now</a>
+        </nav>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h4>Journey to Parenthood</h4>
+          <p>Empowering parents with calm, knowledge, and care.</p>
+        </div>
+
+        <div class="footer-links">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#about">About Angelika</a></li>
+            <li><a href="https://journey-to-parenthood.teachable.com">Online Course</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <ul>
+            <li><a href="/blog/">Blog</a></li>
+            <li><a href="https://www.instagram.com/journey_to_parenthood_course/">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        &copy; 2025 Journey to Parenthood Academy
+      </div>
+    </footer>
+  </body>
+</html>
