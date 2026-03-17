@@ -11,7 +11,7 @@ export const handler = async (event) => {
     const pdfLink = "https://journey-to-parenthood.com/files/free-birth-plan.pdf";
 
     await resend.emails.send({
-      from: "Journey to Parenthood <onboarding@resend.dev>",
+      from: "Journey to Parenthood <hello@journey-to-parenthood.com>",
       to: email,
       subject: "Your free Birth Plan PDF",
       html: `
