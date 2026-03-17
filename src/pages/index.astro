@@ -168,20 +168,20 @@ const latestPosts = posts.sort(
       <h2>Join the Newsletter</h2>
       <p>Sign up to receive updates and get your free <strong>Postpartum Healing Essentials Birth Plan</strong> PDF as a welcome gift!</p>
 
-      <form name="newsletter" method="POST" data-netlify="true" class="newsletter-form">
-        <input type="hidden" name="form-name" value="newsletter" />
-
+      <form id="newsletter-form" class="newsletter-form">
         <div class="form-group">
           <label for="subscriberName">First Name</label>
-          <input type="text" id="subscriberName" name="name" required placeholder="Your Name">
+          <input type="text" id="subscriberName" name="name" placeholder="Your Name" />
         </div>
 
         <div class="form-group">
           <label for="subscriberEmail">Email Address</label>
-          <input type="email" id="subscriberEmail" name="email" required placeholder="Your Email">
+          <input type="email" id="subscriberEmail" name="email" required placeholder="Your Email" />
         </div>
 
         <button type="submit" class="btn btn-primary">Subscribe & Get Free PDF</button>
+
+        <p id="newsletter-message" class="newsletter-message"></p>
       </form>
     </div>
   </section>
@@ -573,6 +573,14 @@ const latestPosts = posts.sort(
       font-family: var(--font-body);
     }
 
+    .newsletter-message {
+      margin-top: 14px;
+      min-height: 24px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--taupe);
+    }
+
     @media (max-width: 1024px) {
       .blog-card {
         flex: 0 0 calc((100% - 24px) / 2);
@@ -817,6 +825,46 @@ const latestPosts = posts.sort(
 
       buildDots();
       render();
+    })();
+
+    (() => {
+      const newsletterForm = document.getElementById('newsletter-form');
+      const newsletterMessage = document.getElementById('newsletter-message');
+
+      if (!newsletterForm || !newsletterMessage) return;
+
+      newsletterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        newsletterMessage.textContent = 'Sending...';
+
+        const formData = new FormData(newsletterForm);
+        const name = formData.get('name');
+        const email = formData.get('email');
+
+        try {
+          const response = await fetch('/.netlify/functions/send-newsletter', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email })
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            newsletterMessage.textContent = 'Success. Please check your email for the PDF.';
+            newsletterForm.reset();
+          } else {
+            newsletterMessage.textContent = 'Something went wrong. Please try again.';
+            console.error(result);
+          }
+        } catch (error) {
+          newsletterMessage.textContent = 'Something went wrong. Please try again.';
+          console.error(error);
+        }
+      });
     })();
   </script>
 </BaseLayout>
