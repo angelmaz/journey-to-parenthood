@@ -8,8 +8,7 @@ export const handler = async (event) => {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    const pdfLink =
-      "https://journey-to-parenthood.com/files/Postpartum%20Healing%20Essentials%20(Booklet%20(US%20Letter%20)).pdf";
+    const pdfLink = "https://journey-to-parenthood.com/files/free-birth-plan.pdf";
 
     await resend.emails.send({
       from: "Journey to Parenthood <onboarding@resend.dev>",

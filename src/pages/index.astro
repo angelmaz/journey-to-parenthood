@@ -165,24 +165,31 @@ const latestPosts = posts.sort(
 
   <section class="newsletter-section" id="newsletter">
     <div class="newsletter-wrapper">
-      <h2>Join the Newsletter</h2>
-      <p>Sign up to receive updates and get your free <strong>Postpartum Healing Essentials Birth Plan</strong> PDF as a welcome gift!</p>
+      <div id="newsletter-box">
+        <h2>Join the Newsletter</h2>
+        <p>Sign up to receive updates and get your free <strong>Postpartum Healing Essentials Birth Plan</strong> PDF as a welcome gift!</p>
 
-      <form id="newsletter-form" class="newsletter-form">
-        <div class="form-group">
-          <label for="subscriberName">First Name</label>
-          <input type="text" id="subscriberName" name="name" required placeholder="Your Name">
-        </div>
+        <form id="newsletter-form" class="newsletter-form">
+          <div class="form-group">
+            <label for="subscriberName">First Name</label>
+            <input type="text" id="subscriberName" name="name" placeholder="Your Name" />
+          </div>
 
-        <div class="form-group">
-          <label for="subscriberEmail">Email Address</label>
-          <input type="email" id="subscriberEmail" name="email" required placeholder="Your Email" />
-        </div>
+          <div class="form-group">
+            <label for="subscriberEmail">Email Address</label>
+            <input type="email" id="subscriberEmail" name="email" required placeholder="Your Email" />
+          </div>
 
-        <button type="submit" class="btn btn-primary">Subscribe & Get Free PDF</button>
+          <button type="submit" class="btn btn-primary">Subscribe & Get Free PDF</button>
 
-        <p id="newsletter-message" class="newsletter-message"></p>
-      </form>
+          <p id="newsletter-message" class="newsletter-message"></p>
+        </form>
+      </div>
+
+      <div id="newsletter-success" class="newsletter-success" style="display:none;">
+        <h2>Thank you</h2>
+        <p>Please check your email for your free PDF.</p>
+      </div>
     </div>
   </section>
 
@@ -581,6 +588,22 @@ const latestPosts = posts.sort(
       color: var(--taupe);
     }
 
+    .newsletter-success {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .newsletter-success h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .newsletter-success p {
+      font-size: 1.05rem;
+      color: var(--taupe);
+      margin-bottom: 0;
+    }
+
     @media (max-width: 1024px) {
       .blog-card {
         flex: 0 0 calc((100% - 24px) / 2);
@@ -830,8 +853,10 @@ const latestPosts = posts.sort(
     (() => {
       const newsletterForm = document.getElementById('newsletter-form');
       const newsletterMessage = document.getElementById('newsletter-message');
+      const newsletterBox = document.getElementById('newsletter-box');
+      const newsletterSuccess = document.getElementById('newsletter-success');
 
-      if (!newsletterForm || !newsletterMessage) return;
+      if (!newsletterForm || !newsletterMessage || !newsletterBox || !newsletterSuccess) return;
 
       newsletterForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -854,8 +879,10 @@ const latestPosts = posts.sort(
           const result = await response.json();
 
           if (response.ok) {
-            newsletterMessage.textContent = 'Success. Please check your email for the PDF.';
             newsletterForm.reset();
+            newsletterMessage.textContent = '';
+            newsletterBox.style.display = 'none';
+            newsletterSuccess.style.display = 'block';
           } else {
             newsletterMessage.textContent = 'Something went wrong. Please try again.';
             console.error(result);
@@ -867,5 +894,5 @@ const latestPosts = posts.sort(
       });
     })();
   </script>
-  
+
 </BaseLayout>
