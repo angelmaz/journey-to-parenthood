@@ -3,8 +3,15 @@ import { Resend } from "resend";
 export const handler = async (event) => {
   try {
     const data = JSON.parse(event.body);
-    const email = data.email;
+    const email = data.email?.trim();
     const name = data.name || "Mama";
+
+    if (!email || !email.includes("@") || !email.includes(".")) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Valid email is required" }),
+      };
+    }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
