@@ -171,7 +171,7 @@ const latestPosts = posts.sort(
       <form id="newsletter-form" class="newsletter-form">
         <div class="form-group">
           <label for="subscriberName">First Name</label>
-          <input type="text" id="subscriberName" name="name" placeholder="Your Name" />
+          <input type="text" id="subscriberName" name="name" required placeholder="Your Name">
         </div>
 
         <div class="form-group">
@@ -867,4 +867,5 @@ const latestPosts = posts.sort(
       });
     })();
   </script>
+  
 </BaseLayout>
