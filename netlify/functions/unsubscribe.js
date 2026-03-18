@@ -41,10 +41,15 @@ export const handler = async (event) => {
         </html>
       `,
     };
-  } catch (error) {
+    } catch (error) {
+    console.error("SEND NEWSLETTER ERROR:", error);
+
     return {
       statusCode: 500,
-      body: error.message,
+      body: JSON.stringify({
+        error: error.message,
+        details: error,
+      }),
     };
   }
 };

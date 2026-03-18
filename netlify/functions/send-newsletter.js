@@ -15,15 +15,50 @@ const supabase = createClient(
 );
 
 export const handler = async (event) => {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        success: false,
+        error: "Method not allowed",
+      }),
+    };
+  }
+
   try {
-    const data = JSON.parse(event.body || "{}");
-    const email = data.email?.trim().toLowerCase();
-    const name = (data.name || "Mama").trim();
+    let parsedBody = {};
+
+    try {
+      parsedBody = JSON.parse(event.body || "{}");
+    } catch {
+      return {
+        statusCode: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          success: false,
+          error: "Invalid request body",
+        }),
+      };
+    }
+
+    const email = parsedBody.email?.trim().toLowerCase();
+    const name = parsedBody.name?.trim() || "Mama";
 
     if (!email || !email.includes("@") || !email.includes(".")) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Valid email is required" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          success: false,
+          error: "Valid email is required",
+        }),
       };
     }
 
@@ -33,7 +68,10 @@ export const handler = async (event) => {
       .eq("email", email)
       .maybeSingle();
 
-    if (fetchError) throw fetchError;
+    if (fetchError) {
+      console.error("SUPABASE FETCH ERROR:", fetchError);
+      throw new Error(fetchError.message || "Failed to fetch subscriber");
+    }
 
     let subscriber = existingSubscriber;
     const nowIso = new Date().toISOString();
@@ -52,7 +90,11 @@ export const handler = async (event) => {
         .select("id, email, unsubscribe_token")
         .single();
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error("SUPABASE INSERT ERROR:", insertError);
+        throw new Error(insertError.message || "Failed to create subscriber");
+      }
+
       subscriber = insertedSubscriber;
     } else if (subscriber.unsubscribed) {
       const { data: updatedSubscriber, error: resubscribeError } = await supabase
@@ -68,19 +110,31 @@ export const handler = async (event) => {
         .select("id, email, unsubscribe_token")
         .single();
 
-      if (resubscribeError) throw resubscribeError;
+      if (resubscribeError) {
+        console.error("SUPABASE RESUBSCRIBE ERROR:", resubscribeError);
+        throw new Error(resubscribeError.message || "Failed to resubscribe");
+      }
+
       subscriber = updatedSubscriber;
     } else {
       return {
         statusCode: 200,
-        body: JSON.stringify({ success: true, message: "Already subscribed" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          success: true,
+          alreadySubscribed: true,
+          message: "Already subscribed",
+        }),
       };
     }
 
-    const pdfLink = "https://journey-to-parenthood.com/files/free-birth-plan.pdf";
+    const pdfLink =
+      "https://journey-to-parenthood.com/files/free-birth-plan.pdf";
     const unsubscribeLink = `https://journey-to-parenthood.com/.netlify/functions/unsubscribe?token=${subscriber.unsubscribe_token}`;
 
-    await resend.emails.send({
+    const emailResponse = await resend.emails.send({
       from: "Journey to Parenthood <hello@journey-to-parenthood.com>",
       to: email,
       subject: "Your Birth Plan PDF is here",
@@ -104,8 +158,10 @@ export const handler = async (event) => {
         <p><a href="https://journey-to-parenthood.com/">Explore the course here</a></p>
         <hr>
         <h3>Learn more for free</h3>
-        <p><a href="https://journey-to-parenthood.com/blog/">Visit the blog</a><br>
-        <a href="https://www.instagram.com/journey_to_parenthood_course/">Follow on Instagram</a></p>
+        <p>
+          <a href="https://journey-to-parenthood.com/blog/">Visit the blog</a><br>
+          <a href="https://www.instagram.com/journey_to_parenthood_course/">Follow on Instagram</a>
+        </p>
         <p>You’re not alone in this journey, and you deserve to feel prepared, supported, and confident.</p>
         <p>Angelika<br>Journey to Parenthood</p>
         <p style="font-size:12px;color:#666;">
@@ -115,14 +171,30 @@ export const handler = async (event) => {
       `,
     });
 
+    console.error("RESEND RESPONSE:", emailResponse);
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        success: true,
+        message: "Subscriber added and welcome email sent",
+      }),
     };
   } catch (error) {
+    console.error("SEND NEWSLETTER ERROR:", error);
+
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        success: false,
+        error: error.message || "Something went wrong",
+      }),
     };
   }
 };
