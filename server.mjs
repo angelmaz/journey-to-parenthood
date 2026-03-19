@@ -161,7 +161,7 @@ app.post("/api/send-newsletter", async (req, res) => {
 
           <p>
             You’re not alone in this journey, and you deserve to feel prepared,
-            supported, and confident.
+            supported, and confident. 
           </p>
 
           <p style="margin-top: 32px;">
