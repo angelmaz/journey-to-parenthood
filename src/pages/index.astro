@@ -1,222 +1,909 @@
-<script>
-  (() => {
-    const root = document.querySelector('.home-carousel');
-    if (!root) return;
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-    const viewport = root.querySelector('.carousel-viewport');
-    const track = root.querySelector('.carousel-track');
-    const cards = Array.from(root.querySelectorAll('.blog-card'));
-    const prev = root.querySelector('.carousel-prev');
-    const next = root.querySelector('.carousel-next');
-    const dotsWrap = document.querySelector('.carousel-dots');
-    const hoverLeft = root.querySelector('.carousel-hover-left');
-    const hoverRight = root.querySelector('.carousel-hover-right');
+const posts = await getCollection('blog');
 
-    let index = 0;
-    let autoScrollFrame = null;
-    let autoDirection = 0;
+const latestPosts = posts.sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+---
 
-    function getPerView() {
-      const w = window.innerWidth;
-      if (w <= 768) return 1;
-      if (w <= 1024) return 2;
-      return 3;
+<BaseLayout
+  title="Journey to Parenthood - Calm, Confident Childbirth Education Course"
+  description="Online childbirth education for expecting parents. Learn pregnancy, labor, birth preparation, postpartum recovery, and breastfeeding."
+  canonical="https://journey-to-parenthood.com/"
+>
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1>Online Childbirth Education: Your calm, confident, and informed birth begins here.</h1>
+      <p>A complete online childbirth education course for modern parents - created with warmth, knowledge, and love.</p>
+      <div class="hero-btns">
+        <a href="https://journey-to-parenthood.teachable.com" class="btn btn-primary hero-main-btn">Enroll on Teachable</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="about-container container">
+      <div class="about-media">
+        <img src="/img/img_left.jpg" alt="Portrait of Angelika Mazurek, physiotherapist and childbirth educator">
+      </div>
+
+      <div class="about-text">
+        <h2>A Little Bit of My Journey</h2>
+        <p class="about-lead">
+          My name is <strong>Angelika</strong>, and before I became a childbirth educator, I became a mother twice.
+          Two completely different stories, both filled with love, strength, and awe.
+        </p>
+
+        <div class="about-card">
+          <p>
+            One of my daughters came into the world through a natural birth, and the other was born by cesarean section.
+            Each experience taught me something profound about trust in my body, in nature, and in the gentle power of preparation.
+          </p>
+          <p style="margin-top: 12px;">
+            I hold a <strong>Master’s degree in Physiotherapy</strong>.
+            My medical background gave me the science, but motherhood gave me the heart.
+            I believe that calm is the strongest medicine, and that understanding our bodies brings peace to our minds.
+          </p>
+          <div class="about-highlights">
+            <div class="pill">Warm, supportive approach</div>
+            <div class="pill">Evidence based education</div>
+            <div class="pill">Natural birth and C section insight</div>
+            <div class="pill">Guidance for modern parents</div>
+          </div>
+          <div class="quote">“Calm is the strongest medicine.”</div>
+        </div>
+
+        <p>
+          That’s why I created <em>Journey to Parenthood</em>:
+          to help parents walk through this time with <strong>knowledge, calm, and confidence</strong>, instead of doubt and uncertainty.
+          Every birth, no matter how it happens, deserves to be met with love and respect.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="course" id="course">
+    <div class="section-header">
+      <h2>From Pregnancy to Confidence</h2>
+      <p>What you'll learn in the 11-module curriculum</p>
+    </div>
+
+    <div class="course-grid container">
+      <div class="course-card">
+        <h3>Understanding Pregnancy</h3>
+        <ul class="modules-list">
+          <li>Physiology of pregnancy</li>
+          <li>Movement and exercises</li>
+          <li>Building the mindset</li>
+        </ul>
+      </div>
+
+      <div class="course-card">
+        <h3>Preparing for Birth</h3>
+        <ul class="modules-list">
+          <li>Labor stages and signs</li>
+          <li>Pain management techniques</li>
+          <li>Partner's role in birth</li>
+        </ul>
+      </div>
+
+      <div class="course-card">
+        <h3>Life After Birth</h3>
+        <ul class="modules-list">
+          <li>The Fourth Trimester</li>
+          <li>Breastfeeding basics</li>
+          <li>Postpartum healing</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top: 30px;">
+      <a href="https://journey-to-parenthood.teachable.com" class="btn btn-primary">Enroll Now - $99</a>
+    </div>
+  </section>
+
+  <section class="tips" id="tips">
+    <div class="section-header">
+      <h2>Latest from the Blog</h2>
+      <p>Browse all available articles for expecting mothers looking for calm, evidence-based guidance.</p>
+    </div>
+
+    <div class="home-carousel" aria-label="Blog articles carousel">
+      <button class="carousel-nav carousel-prev" type="button" aria-label="Previous articles">
+        <span aria-hidden="true">‹</span>
+      </button>
+
+      <div class="carousel-hover-zone carousel-hover-left" aria-hidden="true"></div>
+      <div class="carousel-hover-zone carousel-hover-right" aria-hidden="true"></div>
+
+      <div class="carousel-viewport">
+        <div class="carousel-track">
+          {latestPosts.map((post) => (
+            <article class="blog-card">
+              <a class="blog-card-link" href={`/blog/${post.id}/`}>
+                <div class="blog-card-image">
+                  <img src={post.data.heroImage} alt={post.data.title} />
+                </div>
+
+                <div class="blog-card-body">
+                  <div class="blog-meta">
+                    <span>{post.data.category}</span>
+                    <span>
+                      {post.data.pubDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </span>
+                  </div>
+
+                  <h2>{post.data.title}</h2>
+                  <p>{post.data.description}</p>
+
+                  <span class="blog-read">Read Article →</span>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <button class="carousel-nav carousel-next" type="button" aria-label="Next articles">
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+
+    <div class="carousel-dots" aria-label="Carousel pagination"></div>
+
+    <div style="text-align:center; margin-top: 30px;">
+      <a href="/blog/" class="btn btn-primary">View All Articles</a>
+    </div>
+  </section>
+
+  <section class="newsletter-section" id="newsletter">
+    <div class="newsletter-wrapper">
+      <div id="newsletter-box">
+        <h2>Join the Newsletter</h2>
+        <p>Sign up to receive updates and get your free <strong>Postpartum Healing Essentials Birth Plan</strong> PDF as a welcome gift!</p>
+
+        <form id="newsletter-form" class="newsletter-form">
+          <div class="form-group">
+            <label for="subscriberName">First Name</label>
+            <input type="text" id="subscriberName" name="name" placeholder="Your Name" />
+          </div>
+
+          <div class="form-group">
+            <label for="subscriberEmail">Email Address</label>
+            <input type="email" id="subscriberEmail" name="email" required placeholder="Your Email" />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Subscribe & Get Free PDF</button>
+
+          <p id="newsletter-message" class="newsletter-message"></p>
+        </form>
+      </div>
+
+      <div id="newsletter-success" class="newsletter-success" style="display:none;">
+        <h2>Thank you</h2>
+        <p>Please check your email for your free PDF.</p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .hero {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.35) 100%),
+        url('/img/bground.jpg');
+      background-size: cover;
+      background-position: center;
+      padding: 120px 20px;
+      text-align: center;
     }
 
-    function getMaxIndex() {
-      return Math.max(0, cards.length - getPerView());
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    function cardStepPx() {
-      const first = cards[0];
-      if (!first) return 0;
-      const cardW = first.getBoundingClientRect().width;
-      const style = getComputedStyle(track);
-      const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
-      return cardW + gap;
+    .hero h1 {
+      font-size: 3.5rem;
+      line-height: 1.2;
+      margin-bottom: 18px;
     }
 
-    function clamp() {
-      const maxIndex = getMaxIndex();
-      index = Math.min(Math.max(index, 0), maxIndex);
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 38px;
+      color: var(--taupe);
     }
 
-    function render() {
-      clamp();
-      const x = index * cardStepPx();
-      track.style.transform = `translateX(-${x}px)`;
-      updateDots();
-      updateNav();
+    .hero-btns {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
     }
 
-    function updateNav() {
-      const maxIndex = getMaxIndex();
-      prev.disabled = index === 0;
-      next.disabled = index === maxIndex;
-      prev.style.opacity = prev.disabled ? '0.35' : '1';
-      next.style.opacity = next.disabled ? '0.35' : '1';
+    .hero-main-btn {
+      font-size: 1.1rem;
+      padding: 18px 52px;
+      letter-spacing: 1.6px;
+      border-radius: 60px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
 
-    function buildDots() {
-      if (!dotsWrap) return;
-      dotsWrap.innerHTML = '';
-      const pages = getMaxIndex() + 1;
+    .about {
+      padding: var(--section-padding);
+      background: var(--white);
+    }
 
-      for (let i = 0; i < pages; i++) {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'carousel-dot';
-        b.setAttribute('aria-label', `Go to slide ${i + 1}`);
-        b.addEventListener('click', () => {
-          index = i;
-          render();
-        });
-        dotsWrap.appendChild(b);
+    .about-container {
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .about-media img {
+      width: 100%;
+      height: 520px;
+      object-fit: contain;
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .about-text h2 {
+      font-size: 2.6rem;
+      margin-bottom: 14px;
+    }
+
+    .about-lead {
+      font-size: 1.05rem;
+      color: var(--taupe);
+      margin-bottom: 18px;
+    }
+
+    .about-card {
+      background: rgba(249, 243, 238, 0.6);
+      border: 1px solid rgba(239, 201, 194, 0.35);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      margin: 18px 0 20px;
+    }
+
+    .about-highlights {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 14px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(239, 201, 194, 0.55);
+      font-size: 0.95rem;
+      color: var(--taupe);
+    }
+
+    .quote {
+      font-family: var(--font-head);
+      font-style: italic;
+      font-size: 1.35rem;
+      margin: 18px 0 0;
+      border-left: 3px solid var(--peach);
+      padding-left: 18px;
+    }
+
+    .course {
+      padding: var(--section-padding);
+      background: var(--beige);
+      text-align: center;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .course-card {
+      background: var(--white);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .course-card h3 {
+      color: var(--blush);
+    }
+
+    .modules-list {
+      text-align: left;
+      margin: 20px 0;
+      padding-left: 20px;
+    }
+
+    .modules-list li {
+      list-style: circle;
+      margin-bottom: 10px;
+      color: var(--taupe-light);
+    }
+
+    .tips {
+      padding: var(--section-padding);
+      background: var(--white);
+    }
+
+    .home-carousel {
+      position: relative;
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+
+    .carousel-viewport {
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      transition: transform 0.45s ease;
+      will-change: transform;
+      padding: 8px 0;
+    }
+
+    .blog-card {
+      flex: 0 0 calc((100% - 48px) / 3);
+      background: var(--white);
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(239, 201, 194, 0.35);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      height: 100%;
+    }
+
+    .blog-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+    }
+
+    .blog-card-link {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .blog-card-image {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.7);
+      flex-shrink: 0;
+    }
+
+    .blog-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      display: block;
+    }
+
+    .blog-card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 220px;
+    }
+
+    .blog-card h2 {
+      font-size: 1.3rem;
+      line-height: 1.35;
+      margin-bottom: 10px;
+      min-height: 3.6rem;
+    }
+
+    .blog-card p {
+      color: var(--taupe-light);
+      font-size: 0.96rem;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 4.8rem;
+    }
+
+    .blog-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--taupe-light);
+      margin-bottom: 10px;
+      min-height: 1.4rem;
+    }
+
+    .blog-read {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      color: var(--blush);
+      margin-top: auto;
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 44%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(239, 201, 194, 0.45);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    .carousel-nav span {
+      font-size: 28px;
+      line-height: 1;
+      color: var(--taupe);
+      margin-top: -2px;
+    }
+
+    .carousel-prev {
+      left: -8px;
+    }
+
+    .carousel-next {
+      right: -8px;
+    }
+
+    .carousel-hover-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 110px;
+      z-index: 4;
+    }
+
+    .carousel-hover-left {
+      left: 0;
+    }
+
+    .carousel-hover-right {
+      right: 0;
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(61,61,61,0.35);
+      background: rgba(255,255,255,0.7);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .carousel-dot.active {
+      background: rgba(239, 201, 194, 0.9);
+      transform: scale(1.2);
+      border-color: transparent;
+    }
+
+    .newsletter-section {
+      padding: var(--section-padding);
+      background: var(--beige);
+      text-align: center;
+    }
+
+    .newsletter-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid rgba(239, 201, 194, 0.35);
+    }
+
+    .newsletter-wrapper h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .newsletter-wrapper p {
+      color: var(--taupe-light);
+      margin-bottom: 25px;
+      font-size: 1.05rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: var(--font-body);
+    }
+
+    .newsletter-message {
+      margin-top: 14px;
+      min-height: 24px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--taupe);
+    }
+
+    .newsletter-success {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .newsletter-success h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .newsletter-success p {
+      font-size: 1.05rem;
+      color: var(--taupe);
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .blog-card {
+        flex: 0 0 calc((100% - 24px) / 2);
       }
 
-      updateDots();
+      .carousel-hover-zone {
+        width: 80px;
+      }
     }
 
-    function updateDots() {
-      if (!dotsWrap) return;
-      const dots = Array.from(dotsWrap.querySelectorAll('.carousel-dot'));
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-btns {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .about-container {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .about-media img {
+        height: 380px;
+      }
+
+      .about-highlights {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-wrapper {
+        padding: 20px;
+      }
+
+      .blog-card {
+        flex: 0 0 100%;
+      }
+
+      .blog-card-image {
+        height: 220px;
+      }
+
+      .blog-card-body {
+        min-height: auto;
+      }
+
+      .blog-card h2,
+      .blog-card p,
+      .blog-meta {
+        min-height: auto;
+      }
+
+      .carousel-hover-zone {
+        display: none;
+      }
+
+      .carousel-nav {
+        width: 40px;
+        height: 40px;
+      }
+
+      .carousel-prev {
+        left: -2px;
+      }
+
+      .carousel-next {
+        right: -2px;
+      }
     }
+  </style>
 
-    function stepLeft() {
-      index -= 1;
-      render();
-    }
+  <script>
+    (() => {
+      const root = document.querySelector('.home-carousel');
+      if (!root) return;
 
-    function stepRight() {
-      index += 1;
-      render();
-    }
+      const viewport = root.querySelector('.carousel-viewport');
+      const track = root.querySelector('.carousel-track');
+      const cards = Array.from(root.querySelectorAll('.blog-card'));
+      const prev = root.querySelector('.carousel-prev');
+      const next = root.querySelector('.carousel-next');
+      const dotsWrap = document.querySelector('.carousel-dots');
+      const hoverLeft = root.querySelector('.carousel-hover-left');
+      const hoverRight = root.querySelector('.carousel-hover-right');
 
-    function startHoverScroll(direction) {
-      stopHoverScroll();
-      autoDirection = direction;
+      let index = 0;
+      let autoScrollFrame = null;
+      let autoDirection = 0;
 
-      const loop = () => {
+      function getPerView() {
+        const w = window.innerWidth;
+        if (w <= 768) return 1;
+        if (w <= 1024) return 2;
+        return 3;
+      }
+
+      function getMaxIndex() {
+        return Math.max(0, cards.length - getPerView());
+      }
+
+      function cardStepPx() {
+        const first = cards[0];
+        if (!first) return 0;
+        const cardW = first.getBoundingClientRect().width;
+        const style = getComputedStyle(track);
+        const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+        return cardW + gap;
+      }
+
+      function clamp() {
         const maxIndex = getMaxIndex();
-
-        if (autoDirection === 1 && index < maxIndex) {
-          index += 0.02;
-        } else if (autoDirection === -1 && index > 0) {
-          index -= 0.02;
-        }
-
         index = Math.min(Math.max(index, 0), maxIndex);
+      }
+
+      function render() {
+        clamp();
         const x = index * cardStepPx();
         track.style.transform = `translateX(-${x}px)`;
         updateDots();
         updateNav();
+      }
+
+      function updateNav() {
+        const maxIndex = getMaxIndex();
+        prev.disabled = index === 0;
+        next.disabled = index === maxIndex;
+        prev.style.opacity = prev.disabled ? '0.35' : '1';
+        next.style.opacity = next.disabled ? '0.35' : '1';
+      }
+
+      function buildDots() {
+        if (!dotsWrap) return;
+        dotsWrap.innerHTML = '';
+        const pages = getMaxIndex() + 1;
+
+        for (let i = 0; i < pages; i++) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'carousel-dot';
+          b.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          b.addEventListener('click', () => {
+            index = i;
+            render();
+          });
+          dotsWrap.appendChild(b);
+        }
+
+        updateDots();
+      }
+
+      function updateDots() {
+        if (!dotsWrap) return;
+        const dots = Array.from(dotsWrap.querySelectorAll('.carousel-dot'));
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+
+      function stepLeft() {
+        index -= 1;
+        render();
+      }
+
+      function stepRight() {
+        index += 1;
+        render();
+      }
+
+      function startHoverScroll(direction) {
+        stopHoverScroll();
+        autoDirection = direction;
+
+        const loop = () => {
+          const maxIndex = getMaxIndex();
+
+          if (autoDirection === 1 && index < maxIndex) {
+            index += 0.02;
+          } else if (autoDirection === -1 && index > 0) {
+            index -= 0.02;
+          }
+
+          index = Math.min(Math.max(index, 0), maxIndex);
+          const x = index * cardStepPx();
+          track.style.transform = `translateX(-${x}px)`;
+          updateDots();
+          updateNav();
+
+          autoScrollFrame = requestAnimationFrame(loop);
+        };
 
         autoScrollFrame = requestAnimationFrame(loop);
-      };
+      }
 
-      autoScrollFrame = requestAnimationFrame(loop);
-    }
+      function stopHoverScroll() {
+        if (autoScrollFrame) cancelAnimationFrame(autoScrollFrame);
+        autoScrollFrame = null;
+        index = Math.round(index);
+        render();
+      }
 
-    function stopHoverScroll() {
-      if (autoScrollFrame) cancelAnimationFrame(autoScrollFrame);
-      autoScrollFrame = null;
-      index = Math.round(index);
-      render();
-    }
+      prev?.addEventListener('click', stepLeft);
+      next?.addEventListener('click', stepRight);
 
-    prev?.addEventListener('click', stepLeft);
-    next?.addEventListener('click', stepRight);
+      hoverLeft?.addEventListener('mouseenter', () => startHoverScroll(-1));
+      hoverRight?.addEventListener('mouseenter', () => startHoverScroll(1));
+      hoverLeft?.addEventListener('mouseleave', stopHoverScroll);
+      hoverRight?.addEventListener('mouseleave', stopHoverScroll);
 
-    hoverLeft?.addEventListener('mouseenter', () => startHoverScroll(-1));
-    hoverRight?.addEventListener('mouseenter', () => startHoverScroll(1));
-    hoverLeft?.addEventListener('mouseleave', stopHoverScroll);
-    hoverRight?.addEventListener('mouseleave', stopHoverScroll);
+      root.addEventListener('mouseleave', stopHoverScroll);
 
-    root.addEventListener('mouseleave', stopHoverScroll);
+      let startX = 0;
+      let isDown = false;
 
-    let startX = 0;
-    let isDown = false;
+      viewport?.addEventListener('pointerdown', (e) => {
+        isDown = true;
+        startX = e.clientX;
+      });
 
-    viewport?.addEventListener('pointerdown', (e) => {
-      isDown = true;
-      startX = e.clientX;
-    });
+      viewport?.addEventListener('pointerup', (e) => {
+        if (!isDown) return;
+        isDown = false;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) < 40) return;
+        if (dx < 0) stepRight();
+        else stepLeft();
+      });
 
-    viewport?.addEventListener('pointerup', (e) => {
-      if (!isDown) return;
-      isDown = false;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) < 40) return;
-      if (dx < 0) stepRight();
-      else stepLeft();
-    });
+      viewport?.addEventListener('pointercancel', () => {
+        isDown = false;
+      });
 
-    viewport?.addEventListener('pointercancel', () => {
-      isDown = false;
-    });
+      window.addEventListener('resize', () => {
+        buildDots();
+        render();
+      });
 
-    window.addEventListener('resize', () => {
       buildDots();
       render();
-    });
+    })();
 
-    buildDots();
-    render();
-  })();
+    (() => {
+      const newsletterForm = document.getElementById('newsletter-form');
+  const newsletterMessage = document.getElementById('newsletter-message');
+  const newsletterBox = document.getElementById('newsletter-box');
+  const newsletterSuccess = document.getElementById('newsletter-success');
 
-  (() => {
-    const newsletterForm = document.getElementById('newsletter-form');
-    const newsletterMessage = document.getElementById('newsletter-message');
-    const newsletterBox = document.getElementById('newsletter-box');
-    const newsletterSuccess = document.getElementById('newsletter-success');
+  if (!newsletterForm || !newsletterMessage || !newsletterBox || !newsletterSuccess) return;
 
-    if (!newsletterForm || !newsletterMessage || !newsletterBox || !newsletterSuccess) return;
+  newsletterForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    newsletterForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    newsletterMessage.textContent = 'Sending...';
 
-      newsletterMessage.textContent = 'Sending...';
+    const formData = new FormData(newsletterForm);
+    const name = (formData.get('name') || '').toString().trim();
+    const email = (formData.get('email') || '').toString().trim();
 
-      const formData = new FormData(newsletterForm);
-      const name = (formData.get('name') || '').toString().trim();
-      const email = (formData.get('email') || '').toString().trim();
+    try {
+      const response = await fetch('/api/send-newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ name, email })
+      });
+
+      let result = {};
 
       try {
-        const response = await fetch('/.netlify/functions/send-newsletter', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({ name, email })
-        });
-
-        let result = {};
-
-        try {
-          result = await response.json();
-        } catch (jsonError) {
-          console.error('JSON parse error:', jsonError);
-          throw new Error('Invalid server response');
-        }
-
-        console.log('Newsletter response:', response.status, result);
-
-        if (response.ok && result.success) {
-          newsletterForm.reset();
-          newsletterMessage.textContent = '';
-          newsletterBox.style.display = 'none';
-          newsletterSuccess.style.display = 'block';
-        } else {
-          newsletterMessage.textContent =
-            result.error || 'Something went wrong. Please try again.';
-          console.error('Newsletter failed:', result);
-        }
-      } catch (error) {
-        newsletterMessage.textContent = 'Something went wrong. Please try again.';
-        console.error('Newsletter submit error:', error);
+        result = await response.json();
+      } catch (jsonError) {
+        console.error('JSON parse error:', jsonError);
+        throw new Error('Invalid server response');
       }
-    });
-  })();
-</script>
+
+      console.log('Newsletter response:', response.status, result);
+
+      if (response.ok && result.success) {
+        newsletterForm.reset();
+        newsletterMessage.textContent = '';
+        newsletterBox.style.display = 'none';
+        newsletterSuccess.style.display = 'block';
+      } else {
+        newsletterMessage.textContent =
+          result.error || 'Something went wrong. Please try again.';
+        console.error('Newsletter failed:', result);
+      }
+    } catch (error) {
+      newsletterMessage.textContent = 'Something went wrong. Please try again.';
+      console.error('Newsletter submit error:', error);
+    }
+  });
+})();
+  </script>
+
+</BaseLayout>
