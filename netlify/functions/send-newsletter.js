@@ -19,6 +19,7 @@ const supabase =
 
 export const handler = async (event) => {
   try {
+    console.log("🔥 NEW BUILD VERSION 🔥");
     if (event.httpMethod !== "POST") {
       return {
         statusCode: 405,
