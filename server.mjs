@@ -72,7 +72,10 @@ app.post("/api/send-newsletter", async (req, res) => {
 
     const pdfLink =
       "https://journey-to-parenthood.com/files/free-birth-plan.pdf";
-
+    const courseLink = "https://journey-to-parenthood.teachable.com";
+    const blogLink = "https://journey-to-parenthood.com/blog";
+    const instagramLink = "https://instagram.com/journey.to.parenthood";
+    
     await resend.emails.send({
       from: "Journey to Parenthood <hello@journey-to-parenthood.com>",
       to: email,
