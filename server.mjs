@@ -76,14 +76,99 @@ app.post("/api/send-newsletter", async (req, res) => {
     await resend.emails.send({
       from: "Journey to Parenthood <hello@journey-to-parenthood.com>",
       to: email,
-      subject: "Your Birth Plan PDF is here",
+      subject: "Welcome to Journey to Parenthood",
       html: `
-        <h2>Welcome to Journey to Parenthood</h2>
-        <p>Hi ${name},</p>
-        <p>I’m so happy you’re here.</p>
-        <p>Your free PDF is ready:</p>
-        <p><a href="${pdfLink}">Download your Birth Plan PDF</a></p>
-        <p>Angelika<br />Journey to Parenthood</p>
+        <div style="font-family: Arial, Helvetica, sans-serif; color: #333333; line-height: 1.7; max-width: 640px; margin: 0 auto; padding: 20px;">
+          <h1 style="font-size: 28px; color: #222222; margin-bottom: 24px;">
+            Welcome to Journey to Parenthood
+          </h1>
+
+          <p>Hi ${name},</p>
+
+          <p>I’m so happy you’re here.</p>
+
+          <p>
+            Pregnancy is a beautiful time, but it can also feel overwhelming, especially
+            when it comes to preparing for birth. There’s so much information online,
+            and it’s hard to know what really matters.
+          </p>
+
+          <p>
+            That’s exactly why I created Journey to Parenthood, to give you clear, calm,
+            and evidence-based guidance so you can feel confident, not confused.
+          </p>
+
+          <p><strong>Your first step starts here:</strong></p>
+
+          <p style="margin: 24px 0;">
+            <a
+              href="${pdfLink}"
+              style="background-color: #d89c8b; color: #ffffff; text-decoration: none; padding: 14px 22px; border-radius: 8px; display: inline-block; font-weight: bold;"
+            >
+              Download your Birth Plan PDF
+            </a>
+          </p>
+
+          <p><strong>This PDF will help you:</strong></p>
+          <ul style="padding-left: 20px;">
+            <li>organize your birth preferences</li>
+            <li>understand your options</li>
+            <li>feel more prepared and in control</li>
+          </ul>
+
+          <p><strong>Want to feel truly prepared for birth?</strong></p>
+
+          <p>
+            The truth is: a birth plan alone is not enough.
+          </p>
+
+          <p>
+            Understanding what is happening in your body during labor, how to manage
+            contractions, and how to make informed decisions can completely change your
+            birth experience.
+          </p>
+
+          <p>
+            That’s why I created my complete birth preparation course, to guide you
+            step by step through pregnancy, labor, and early postpartum.
+          </p>
+
+          <p style="margin: 24px 0;">
+            <a
+              href="${courseLink}"
+              style="background-color: #333333; color: #ffffff; text-decoration: none; padding: 14px 22px; border-radius: 8px; display: inline-block; font-weight: bold;"
+            >
+              Explore the course here
+            </a>
+          </p>
+
+          <p><strong>Learn more for free</strong></p>
+
+          <p>
+            I regularly share practical tips, checklists, and education to support you
+            on your journey:
+          </p>
+
+          <p>
+            <a href="${blogLink}" style="color: #d89c8b; font-weight: bold; text-decoration: none;">
+              Visit the blog
+            </a>
+            <br />
+            <a href="${instagramLink}" style="color: #d89c8b; font-weight: bold; text-decoration: none;">
+              Follow on Instagram
+            </a>
+          </p>
+
+          <p>
+            You’re not alone in this journey, and you deserve to feel prepared,
+            supported, and confident.
+          </p>
+
+          <p style="margin-top: 32px;">
+            Angelika<br />
+            Journey to Parenthood
+          </p>
+        </div>
       `,
     });
 
